@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --primary: #0B3C8C;
+  --secondary: #1DA1F2;
+  --dark: #0F172A;
+  --light: #F8FAFC;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--light);
+  color: var(--dark);
+}
+
+.heading-primary {
+  @apply text-3xl md:text-4xl font-bold;
+  color: var(--primary);
+}
+
+.heading-gradient {
+  @apply text-3xl md:text-5xl font-bold;
+  background: linear-gradient(to right, #0B3C8C, #1DA1F2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-primary {
+  @apply px-6 py-3 rounded-xl text-white font-semibold transition-all duration-300;
+  background: linear-gradient(to right, #0B3C8C, #1DA1F2);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(13, 60, 140, 0.3);
+}
+
+.btn-secondary {
+  @apply px-6 py-3 rounded-xl font-semibold transition-all duration-300;
+  border: 2px solid #0B3C8C;
+  color: #0B3C8C;
+}
+
+.btn-secondary:hover {
+  background: #0B3C8C;
+  color: white;
+}
+
+.input {
+  @apply w-full px-4 py-3 rounded-lg border transition-all;
+  border-color: #e2e8f0;
+}
+
+.input:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.2);
+  outline: none;
+}
+
+.blinking-cursor {
+  font-weight: 100;
+  font-size: 1.5rem;
+  color: var(--secondary);
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
