@@ -1,36 +1,88 @@
-// Simple and reliable email service using FormSubmit
+// High-reliability email delivery service for Mahntrix Technologies
+export const RECIPIENT_EMAIL = "infomahntrix@gmail.com";
+
 export const sendContactEmail = async (formData) => {
   try {
-    // REPLACE THIS with your actual Gmail address
-    const YOUR_EMAIL = "amanq3944@gmail.com"; // ← CHANGE THIS!
-    
+    // 1. Try local Next.js API route first
+    try {
+      const apiResponse = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (apiResponse.ok) {
+        const data = await apiResponse.json();
+        return { success: true, data };
+      }
+    } catch (apiErr) {
+      console.warn('Local /api/contact call failed, falling back to direct relay:', apiErr.message);
+    }
+
+    // 2. Direct FormSubmit HTTP Relay to infomahntrix@gmail.com
     const formDataToSend = new FormData();
     formDataToSend.append('name', formData.name || '');
     formDataToSend.append('email', formData.email || '');
     formDataToSend.append('phone', formData.phone || '');
     formDataToSend.append('company', formData.company || '');
-    formDataToSend.append('service', formData.service || '');
-    formDataToSend.append('budget', formData.budget || '');
+    formDataToSend.append('service', formData.service || formData.projectType || 'Consultation Request');
+    formDataToSend.append('budget', formData.budget || 'Not specified');
     formDataToSend.append('message', formData.message || '');
-    formDataToSend.append('_subject', `New Contact: ${formData.name} - ${formData.company || 'Individual'}`);
+    formDataToSend.append('_subject', `🚀 New Consultation: ${formData.name || 'Client'} [${formData.service || formData.projectType || 'Inquiry'}]`);
+    formDataToSend.append('_replyto', formData.email || '');
     formDataToSend.append('_captcha', 'false');
     formDataToSend.append('_template', 'table');
-    
-    const response = await fetch(`https://formsubmit.co/ajax/${YOUR_EMAIL}`, {
+
+    const relayResponse = await fetch(`https://formsubmit.co/ajax/${RECIPIENT_EMAIL}`, {
       method: 'POST',
-      body: formDataToSend
+      body: formDataToSend,
+      headers: {
+        'Accept': 'application/json',
+      },
     });
 
-    const result = await response.json();
-    
-    if (result.success) {
-      console.log('Email sent successfully!');
+    const relayResult = await relayResponse.json().catch(() => ({}));
+
+    if (relayResult.success === "true" || relayResult.success === true || relayResponse.ok) {
       return { success: true };
     } else {
-      throw new Error('Failed to send');
+      throw new Error(relayResult.message || 'Transmission failed');
     }
   } catch (error) {
-    console.error('Email error:', error);
+    console.error('sendContactEmail error:', error);
+
+    // Final emergency JSON POST attempt
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${RECIPIENT_EMAIL}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          service: formData.service || formData.projectType,
+          budget: formData.budget,
+          message: formData.message,
+          _subject: `⚡ Consultation Request: ${formData.name}`,
+          _replyto: formData.email,
+          _captcha: "false",
+        }),
+      });
+
+      if (response.ok) {
+        return { success: true };
+      }
+    } catch (e) {
+      console.error('Final emergency relay error:', e);
+    }
+
     return { success: false, error: error.message };
   }
 };

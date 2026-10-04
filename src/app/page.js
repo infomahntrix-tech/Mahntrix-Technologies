@@ -1,322 +1,268 @@
-"use client";
+import Link from "next/link";
+import HeroCanvas from "@/components/HeroCanvas";
+import TechMarquee from "@/components/TechMarquee";
+import ServicesAccordion from "@/components/ServicesAccordion";
+import WorkCard from "@/components/WorkCard";
+import CtaBanner from "@/components/CtaBanner";
+import ScrollBuildSection from "@/components/motion/ScrollBuildSection";
+import RevealText from "@/components/motion/RevealText";
+import { FadeIn, Stagger, StaggerItem } from "@/components/motion/FadeIn";
+import { PROJECTS } from "@/lib/projectsData";
+import { ArrowUpRight, ArrowDown } from "lucide-react";
 
-import Company from "@/app/company/page";
-import Navbar from "@/components/company/Navbar";
-import Footer from "@/components/company/Footer";
-import { FaWhatsapp, FaTimes, FaRobot, FaTrash, FaPaperPlane } from "react-icons/fa";
-import { useState, useRef, useEffect } from "react";
+export const metadata = {
+  title: "Mahntrix Technologies | Software & Digital Engineering Agency",
+  description: "Mahntrix Technologies builds high-performance websites, web applications, mobile apps, enterprise ERPs, custom CRMs, custom software, and AI/LLM solutions.",
+};
 
 export default function Home() {
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { text: "Hello! I'm your AI assistant. How can I help you today?", sender: "bot" },
-  ]);
-  const [inputMessage, setInputMessage] = useState("");
-  const messagesEndRef = useRef(null);
-  const inputRef = useRef(null);
-  const chatContainerRef = useRef(null);
-
-  const phoneNumber = "9575932050";
-  const message = "Hello! I'm interested in your services.";
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  useEffect(() => {
-    if (isChatOpen) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
-    }
-  }, [isChatOpen]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isChatOpen && chatContainerRef.current && !chatContainerRef.current.contains(event.target)) {
-        if (!event.target.closest('[aria-label="Open AI Chat"]')) {
-          setIsChatOpen(false);
-        }
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isChatOpen]);
-
-  useEffect(() => {
-    if (isChatOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isChatOpen]);
-
-  const sendMessage = (e) => {
-    e.preventDefault();
-    if (!inputMessage.trim()) return;
-
-    setMessages([...messages, { text: inputMessage, sender: "user" }]);
-
-    setTimeout(() => {
-      let botResponse = "";
-      const userMsg = inputMessage.toLowerCase();
-
-      if (userMsg.includes("hello") || userMsg.includes("hi") || userMsg.includes("hey")) {
-        botResponse = "Hello! How can I assist you with our software services today?";
-      } else if (userMsg.includes("service") || userMsg.includes("offer")) {
-        botResponse = "We offer Web Development, Mobile Apps, Cloud Solutions, AI Integration, Cybersecurity, and IT Consulting.";
-      } else if (userMsg.includes("price") || userMsg.includes("cost") || userMsg.includes("budget")) {
-        botResponse = "Our pricing depends on project requirements. Would you like to schedule a free consultation?";
-      } else if (userMsg.includes("contact") || userMsg.includes("phone") || userMsg.includes("email")) {
-        botResponse = "You can reach us at +91 9575932050 or email us at smartweb@company.com.";
-      } else if (userMsg.includes("web") || userMsg.includes("website")) {
-        botResponse = "We build modern, responsive websites using React, Next.js, and other cutting-edge technologies.";
-      } else if (userMsg.includes("mobile") || userMsg.includes("app")) {
-        botResponse = "We develop native and cross-platform mobile apps for iOS and Android using React Native and Flutter.";
-      } else if (userMsg.includes("cloud") || userMsg.includes("aws")) {
-        botResponse = "We provide cloud solutions including AWS, Azure, and Google Cloud setup and management.";
-      } else if (userMsg.includes("ai") || userMsg.includes("machine")) {
-        botResponse = "We offer AI and ML solutions including custom LLM fine-tuning, chatbots, and predictive analytics.";
-      } else if (userMsg.includes("consultation") || userMsg.includes("meeting")) {
-        botResponse = "Great! Click Get Free Consultation in the navbar to book a meeting with our team.";
-      } else if (userMsg.includes("thank")) {
-        botResponse = "You are welcome! Is there anything else I can help you with?";
-      } else if (userMsg.includes("bye")) {
-        botResponse = "Goodbye! Feel free to come back if you have more questions. Have a great day!";
-      } else if (userMsg.includes("portfolio") || userMsg.includes("work") || userMsg.includes("projects")) {
-        botResponse = "Check out our portfolio in the Projects section. We have delivered 150+ successful projects!";
-      } else {
-        botResponse = "Would you like to speak with our team for more detailed information? You can reach us on WhatsApp.";
-      }
-
-      setMessages((prev) => [
-        ...prev,
-        { text: botResponse, sender: "bot" },
-      ]);
-    }, 800);
-
-    setInputMessage("");
-  };
-
-  const clearChat = () => {
-    setMessages([
-      { text: "Hello! I'm your AI assistant. How can I help you today?", sender: "bot" },
-    ]);
-  };
-
-  const quickReplies = [
-    "What services?",
-    "Pricing?",
-    "Need a website",
-    "Mobile app",
-    "Consultation",
-    "Portfolio",
-  ];
+  const featuredProjects = PROJECTS.slice(0, 6);
 
   return (
-    <>
-      <Navbar />
-      <main className="relative">
-        <Company />
+    <main className="relative flex flex-col bg-ink text-paper">
+      {/* ========================================================================= */}
+      {/* 1. HERO SECTION */}
+      {/* ========================================================================= */}
+      <section className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-ink pt-32 pb-20">
+        <HeroCanvas />
 
-        <div className="fixed bottom-4 sm:bottom-6 left-4 sm:left-6 z-40">
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative bg-green-500 hover:bg-green-600 text-white p-3 sm:p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl flex items-center justify-center"
-            aria-label="Chat on WhatsApp"
-          >
-            <FaWhatsapp className="w-5 h-5 sm:w-6 sm:h-6" />
-            <span className="absolute left-full ml-2 sm:ml-3 px-2 sm:px-3 py-1 bg-gray-800 text-white text-xs sm:text-sm rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none hidden sm:block">
-              Chat on WhatsApp
-            </span>
-          </a>
-        </div>
-
-        <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-40">
-          <button
-            onClick={() => setIsChatOpen(!isChatOpen)}
-            className="group relative bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white p-3 sm:p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl flex items-center justify-center"
-            aria-label="Open AI Chat"
-          >
-            {isChatOpen ? (
-              <FaTimes className="w-5 h-5 sm:w-6 sm:h-6" />
-            ) : (
-              <FaRobot className="w-5 h-5 sm:w-6 sm:h-6" />
-            )}
-            <span className="absolute right-full mr-2 sm:mr-3 px-2 sm:px-3 py-1 bg-gray-800 text-white text-xs sm:text-sm rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none hidden sm:block">
-              {isChatOpen ? "Close Chat" : "AI Assistant"}
-            </span>
-            {!isChatOpen && (
-              <span className="absolute inset-0 rounded-full bg-blue-400 opacity-30 animate-ping"></span>
-            )}
-          </button>
-        </div>
-
-        {isChatOpen && (
-          <>
-            <div 
-              className="fixed inset-0 bg-black/50 z-40"
-              onClick={() => setIsChatOpen(false)}
-            />
-            
-            <div 
-              ref={chatContainerRef}
-              className="fixed z-50 bg-white shadow-2xl flex flex-col overflow-hidden inset-x-4 top-16 bottom-20 sm:top-20 sm:bottom-24 md:inset-auto md:bottom-24 md:right-6 md:w-[420px] md:h-[600px] md:max-h-[calc(100vh-120px)] lg:w-[450px] lg:h-[650px] rounded-2xl animate-slide-up"
-            >
-              <div className="flex-shrink-0 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-3 sm:p-4 rounded-t-2xl">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="relative">
-                      <FaRobot className="w-5 h-5 sm:w-6 sm:h-6" />
-                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-400 rounded-full border-2 border-white"></span>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-sm sm:text-base">AI Assistant</h3>
-                      <p className="text-xs text-blue-100">Always here to help</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1 sm:gap-2">
-                    <button
-                      onClick={clearChat}
-                      className="hover:bg-white/20 p-1.5 sm:p-2 rounded-lg transition-colors"
-                      title="Clear chat"
-                    >
-                      <FaTrash className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    </button>
-                    <button
-                      onClick={() => setIsChatOpen(false)}
-                      className="hover:bg-white/20 p-1.5 sm:p-2 rounded-lg transition-colors"
-                    >
-                      <FaTimes className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2.5 sm:space-y-3 bg-gradient-to-b from-gray-50 to-white">
-                {messages.map((msg, index) => (
-                  <div
-                    key={index}
-                    className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"} animate-fade-in`}
-                  >
-                    {msg.sender === "bot" && (
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-2 flex-shrink-0">
-                        <FaRobot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
-                      </div>
-                    )}
-                    <div
-                      className={`max-w-[75%] p-2.5 sm:p-3 rounded-2xl ${
-                        msg.sender === "user"
-                          ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-br-none"
-                          : "bg-white text-gray-800 rounded-bl-none shadow-sm border border-gray-200"
-                      }`}
-                    >
-                      <p className="text-xs sm:text-sm leading-relaxed break-words">{msg.text}</p>
-                    </div>
-                    {msg.sender === "user" && (
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-300 rounded-full flex items-center justify-center ml-2 flex-shrink-0">
-                        <span className="text-gray-600 text-xs font-bold">You</span>
-                      </div>
-                    )}
-                  </div>
-                ))}
-                <div ref={messagesEndRef} />
-              </div>
-
-              <div className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 bg-white border-t border-gray-100 overflow-x-auto whitespace-nowrap scrollbar-hide">
-                <div className="flex gap-1.5 sm:gap-2">
-                  {quickReplies.map((reply, index) => (
-                    <button
-                      key={index}
-                      onClick={() => {
-                        setInputMessage(reply);
-                        inputRef.current?.focus();
-                      }}
-                      className="text-xs px-2.5 sm:px-3 py-1.5 sm:py-2 bg-gray-100 hover:bg-blue-100 hover:text-blue-700 text-gray-700 rounded-full transition-all duration-200 whitespace-nowrap flex-shrink-0"
-                    >
-                      {reply}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <form
-                onSubmit={sendMessage}
-                className="flex-shrink-0 p-3 sm:p-4 bg-white border-t border-gray-200 rounded-b-2xl"
-              >
-                <div className="flex gap-2">
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={inputMessage}
-                    onChange={(e) => setInputMessage(e.target.value)}
-                    placeholder="Type your message..."
-                    className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                  />
-                  <button
-                    type="submit"
-                    disabled={!inputMessage.trim()}
-                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 sm:px-5 py-2 sm:py-3 rounded-xl transition-all duration-300 font-medium text-sm shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <FaPaperPlane className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  </button>
-                </div>
-              </form>
+        <div className="relative mx-auto w-full max-w-6xl px-6 z-10">
+          {/* Badge */}
+          <FadeIn delay={0.05}>
+            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 backdrop-blur-sm shadow-inner">
+              <span className="size-2 rounded-full bg-lime shadow-[0_0_12px_2px] shadow-lime/60 animate-pulse" />
+              <span className="font-mono text-xs tracking-widest text-paper/80 uppercase">
+                INNOVATIVE SOFTWARE &amp; AI ENGINEERING AGENCY
+              </span>
             </div>
-          </>
-        )}
-      </main>
-      <Footer />
+          </FadeIn>
 
-      <style jsx>{`
-        @keyframes slide-up {
-          from {
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-        
-        .animate-slide-up {
-          animation: slide-up 0.3s ease-out;
-        }
-        
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(5px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.2s ease-out;
-        }
-        
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
-    </>
+          {/* Main Hero Headline with Word Mask Reveal */}
+          <h1 className="font-display text-giant max-w-5xl tracking-tight text-paper font-bold">
+            <RevealText text="Empowering your digital future" />
+          </h1>
+
+          {/* Subtitle */}
+          <FadeIn delay={0.25}>
+            <p className="mt-8 max-w-2xl text-lg sm:text-xl text-fog leading-relaxed font-sans">
+              Mahntrix Technologies engineers high-performance websites, web applications, mobile apps, enterprise ERPs, custom CRMs, bespoke software, and autonomous AI &amp; LLM solutions that deliver measurable results.
+            </p>
+          </FadeIn>
+
+          {/* CTA Action Buttons */}
+          <FadeIn delay={0.4}>
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <Link href="/contact/" className="inline-flex">
+                <span className="group relative inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-tight transition-colors duration-300 will-change-transform bg-lime text-ink hover:bg-lime-bright h-14 px-8 text-base font-display">
+                  <span className="relative z-10 inline-flex items-center gap-2">
+                    Book consultation
+                    <ArrowUpRight className="size-[1.1em] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
+                </span>
+              </Link>
+
+              <Link href="/services/" className="inline-flex">
+                <span className="group relative inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-tight transition-colors duration-300 will-change-transform border border-white/20 text-paper hover:bg-white/5 backdrop-blur-sm h-14 px-8 text-base font-display">
+                  <span className="relative z-10 inline-flex items-center gap-2">
+                    View services
+                  </span>
+                </span>
+              </Link>
+            </div>
+          </FadeIn>
+
+          {/* Scroll Indicator */}
+          <FadeIn delay={0.55}>
+            <div className="mt-16 flex items-center gap-3 text-xs font-mono text-fog-dim">
+              <div className="flex size-7 items-center justify-center rounded-full border border-white/10 text-lime animate-bounce">
+                <ArrowDown className="size-3.5" />
+              </div>
+              <span className="tracking-widest uppercase">( Keep scrolling )</span>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 2. INTERACTIVE SCROLL-TRIGGERED "LET'S BUILD" SECTION */}
+      {/* ========================================================================= */}
+      <ScrollBuildSection />
+
+      {/* ========================================================================= */}
+      {/* 3. TECH STACK MARQUEE TICKER */}
+      {/* ========================================================================= */}
+      <TechMarquee />
+
+      {/* ========================================================================= */}
+      {/* 4. INTRO STATEMENT & KEY METRICS (WHAT WE DO) */}
+      {/* ========================================================================= */}
+      <section className="bg-ink py-24 sm:py-32">
+        <div className="mx-auto max-w-6xl px-6">
+          <p className="eyebrow text-lime">( What we do )</p>
+          <h2 className="font-display text-huge mt-6 max-w-4xl text-paper font-bold leading-tight">
+            <RevealText text="We build the websites, software platforms, and scalable AI systems behind ambitious global brands." />
+          </h2>
+
+          {/* 4-column metric counters */}
+          <Stagger className="mt-20 grid grid-cols-2 gap-8 border-t border-white/10 pt-12 md:grid-cols-4">
+            <StaggerItem className="border-l border-white/10 pl-6">
+              <p className="font-display text-4xl sm:text-5xl font-bold text-lime">50+</p>
+              <p className="mt-2 text-sm text-fog font-mono">Projects delivered</p>
+            </StaggerItem>
+            <StaggerItem className="border-l border-white/10 pl-6">
+              <p className="font-display text-4xl sm:text-5xl font-bold text-paper">99+</p>
+              <p className="mt-2 text-sm text-fog font-mono">Avg. Lighthouse score</p>
+            </StaggerItem>
+            <StaggerItem className="border-l border-white/10 pl-6">
+              <p className="font-display text-4xl sm:text-5xl font-bold text-lime">4.9/5</p>
+              <p className="mt-2 text-sm text-fog font-mono">Client satisfaction</p>
+            </StaggerItem>
+            <StaggerItem className="border-l border-white/10 pl-6">
+              <p className="font-display text-4xl sm:text-5xl font-bold text-paper">5+ yrs</p>
+              <p className="mt-2 text-sm text-fog font-mono">Engineering excellence</p>
+            </StaggerItem>
+          </Stagger>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 5. FULL-STACK SERVICES SECTION */}
+      {/* ========================================================================= */}
+      <ServicesAccordion />
+
+      {/* ========================================================================= */}
+      {/* 6. THE APPROACH (HIGH-CONTRAST LIGHT SECTION) */}
+      {/* ========================================================================= */}
+      <section className="bg-paper py-24 text-ink sm:py-32">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+            {/* Sticky Left Column */}
+            <div className="lg:sticky lg:top-28 lg:self-start">
+              <p className="eyebrow text-ink/60">( The approach )</p>
+              <h2 className="font-display text-giant mt-5 text-ink font-bold leading-tight">
+                <RevealText text="How we drive growth" />
+              </h2>
+              <p className="mt-6 max-w-sm text-lg text-ink/70 leading-relaxed font-sans">
+                A proven process that turns software engineering and AI automation into your most reliable competitive advantage.
+              </p>
+              <Link href="/about/" className="inline-flex mt-8">
+                <span className="group relative inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-tight transition-colors duration-300 will-change-transform bg-lime text-ink hover:bg-lime-bright h-14 px-7 text-base font-display">
+                  <span className="relative z-10 inline-flex items-center gap-2">
+                    About the team
+                    <ArrowUpRight className="size-[1.1em] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
+                </span>
+              </Link>
+            </div>
+
+            {/* Right Column Step Cards */}
+            <div className="space-y-8 divide-y divide-ink/10">
+              <FadeIn delay={0.1} className="pt-8 first:pt-0">
+                <span className="font-mono text-sm font-semibold text-ink/40">01</span>
+                <h3 className="font-display text-2xl sm:text-3xl font-bold mt-2 text-ink">
+                  Strategy first
+                </h3>
+                <p className="mt-3 text-ink/70 leading-relaxed">
+                  We start with your business goals, user journeys, and technical constraints — not a generic template. Every architectural decision maps directly to metrics that matter to your bottom line.
+                </p>
+              </FadeIn>
+
+              <FadeIn delay={0.2} className="pt-8">
+                <span className="font-mono text-sm font-semibold text-ink/40">02</span>
+                <h3 className="font-display text-2xl sm:text-3xl font-bold mt-2 text-ink">
+                  Designed to convert
+                </h3>
+                <p className="mt-3 text-ink/70 leading-relaxed">
+                  Beautiful is table stakes. We engineer seamless user experiences, intuitive navigation patterns, and psychological trigger points that turn passive visitors into engaged, paying customers.
+                </p>
+              </FadeIn>
+
+              <FadeIn delay={0.3} className="pt-8">
+                <span className="font-mono text-sm font-semibold text-ink/40">03</span>
+                <h3 className="font-display text-2xl sm:text-3xl font-bold mt-2 text-ink">
+                  Built to last
+                </h3>
+                <p className="mt-3 text-ink/70 leading-relaxed">
+                  Fast, accessible, maintainable code on modern stacks (Next.js 15, Flutter, React Native, PostgreSQL, Cloud CDNs) — so your digital investment continues performing flawlessly for years to come.
+                </p>
+              </FadeIn>
+
+              <FadeIn delay={0.4} className="pt-8">
+                <span className="font-mono text-sm font-semibold text-ink/40">04</span>
+                <h3 className="font-display text-2xl sm:text-3xl font-bold mt-2 text-ink">
+                  Optimised forever
+                </h3>
+                <p className="mt-3 text-ink/70 leading-relaxed">
+                  Launch day is just the starting line. We continuously monitor performance, run iterative A/B improvements, and refine your technical funnel so results compound month over month.
+                </p>
+              </FadeIn>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 7. SELECTED WORK SECTION */}
+      {/* ========================================================================= */}
+      <section className="bg-ink py-24 sm:py-32">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+            <div>
+              <p className="eyebrow text-lime">( Selected work )</p>
+              <h2 className="font-display text-giant mt-5 text-paper font-bold">
+                <RevealText text="Proof, not promises" />
+              </h2>
+            </div>
+            <FadeIn delay={0.2}>
+              <Link href="/work/" className="inline-flex">
+                <span className="group relative inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-tight transition-colors duration-300 will-change-transform border border-paper/30 hover:bg-paper/10 backdrop-blur-sm h-14 px-7 text-base text-paper font-display">
+                  <span className="relative z-10 inline-flex items-center gap-2">
+                    View all work
+                    <ArrowUpRight className="size-[1.1em] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
+                </span>
+              </Link>
+            </FadeIn>
+          </div>
+
+          <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {featuredProjects.map((project, idx) => (
+              <FadeIn key={project.id} delay={idx * 0.08}>
+                <WorkCard project={project} />
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 8. CLIENT TESTIMONIAL QUOTE SECTION */}
+      {/* ========================================================================= */}
+      <section className="border-y border-white/10 bg-ink-soft py-24 sm:py-32">
+        <div className="mx-auto max-w-5xl px-6 text-center">
+          <p className="eyebrow text-lime">( What clients say )</p>
+          <blockquote className="font-display mt-8 text-3xl leading-tight text-paper sm:text-5xl sm:leading-tight font-bold">
+            <RevealText text="“Mahntrix Technologies didn't just build us an application — they engineered the core engine that powers our entire business operations.”" />
+          </blockquote>
+          <FadeIn delay={0.3} className="mt-10">
+            <p className="text-paper font-display text-lg font-semibold">William Jones</p>
+            <p className="text-sm text-fog font-mono mt-1">Director, Kiwiana Immigration Services</p>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 9. GIANT CTA BANNER */}
+      {/* ========================================================================= */}
+      <CtaBanner
+        eyebrow="Start the conversation"
+        heading="Let's build your digital future."
+        description="Book a free, no-pressure consultation. We'll show you exactly where the biggest technology and revenue growth opportunities are."
+        primaryButtonText="Book consultation"
+        primaryButtonHref="/contact/"
+        secondaryButtonText="View services"
+        secondaryButtonHref="/services/"
+      />
+    </main>
   );
 }

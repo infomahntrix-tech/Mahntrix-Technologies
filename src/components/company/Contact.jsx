@@ -15,7 +15,7 @@ const Contact = () => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    }); 
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -61,7 +61,7 @@ const Contact = () => {
         </svg>
       ),
       title: 'Visit Us',
-      detail: 'Gwalior, Madhya Pradesh, India',
+      detail: 'India',
       link: '#',
     },
   ];

@@ -4,12 +4,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'randomuser.me',
-        port: '',
-        pathname: '/api/portraits/**',
+        hostname: '**',
       },
     ],
-    domains: ['img.icons8.com', 'cdn.pixabay.com', 'images.unsplash.com', 'cdn-icons-png.flaticon.com', 'encrypted-tbn0.gstatic.com'],
   },
   experimental: {
     externalDir: true,
