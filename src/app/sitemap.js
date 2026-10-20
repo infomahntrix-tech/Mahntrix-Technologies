@@ -7,9 +7,9 @@ export default function sitemap() {
   const staticRoutes = [
     "",
     "/services/",
+    "/product/",
     "/work/",
     "/about/",
-    "/pricing/",
     "/insights/",
     "/contact/",
   ].map((route) => ({

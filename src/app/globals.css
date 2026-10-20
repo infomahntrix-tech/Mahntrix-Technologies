@@ -33,6 +33,7 @@
 }
 
 html {
+  position: relative;
   scroll-behavior: smooth;
   color-scheme: dark;
 }

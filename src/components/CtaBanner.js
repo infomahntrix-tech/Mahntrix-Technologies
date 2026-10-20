@@ -35,7 +35,12 @@ export default function CtaBanner({
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href={primaryButtonHref} className="inline-flex">
+            <Link
+              href={primaryButtonHref}
+              data-analytics-cta={primaryButtonText}
+              data-analytics-location="cta_banner"
+              className="inline-flex"
+            >
               <span className="group relative inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-tight transition-colors duration-300 will-change-transform bg-ink text-paper hover:bg-ink-soft border border-white/10 h-14 px-7 text-base font-display">
                 <span className="relative z-10 inline-flex items-center gap-2">
                   {primaryButtonText}

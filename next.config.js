@@ -12,6 +12,15 @@ const nextConfig = {
     externalDir: true,
   },
   transpilePackages: ["framer-motion"],
+  async redirects() {
+    return [
+      {
+        source: '/pricing',
+        destination: '/contact',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

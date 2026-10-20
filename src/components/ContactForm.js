@@ -4,6 +4,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Send, CheckCircle2, ArrowRight } from "lucide-react";
 import { sendContactEmail } from "@/utils/emailService";
+import { trackFormStart, trackFormError, trackLeadSubmission } from "@/lib/analytics";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -21,6 +22,12 @@ export default function ContactForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // Track form start on first interaction
+    trackFormStart({
+      form_id: 'main_contact_form',
+      form_name: 'Consultation Request',
+      service_name: formData.service || 'Websites',
+    });
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -28,6 +35,11 @@ export default function ContactForm() {
     e.preventDefault();
 
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      trackFormError({
+        form_id: 'main_contact_form',
+        form_name: 'Consultation Request',
+        error_type: 'required_fields_missing',
+      });
       toast.error("Please fill in all required fields (Name, Email, Message).");
       return;
     }
@@ -38,6 +50,13 @@ export default function ContactForm() {
       const result = await sendContactEmail(formData);
 
       if (result.success) {
+        // Confirmed server/relay success: push generate_lead event with non-PII parameters
+        trackLeadSubmission({
+          form_id: 'main_contact_form',
+          form_name: 'Consultation Request',
+          service_name: formData.service || 'Websites',
+          budget_tier: formData.budget || 'Not specified',
+        });
         setIsSubmitted(true);
         toast.success("Thank you! Your consultation request has been dispatched to infomahntrix@gmail.com. We'll be in touch within 24 hours.");
       } else {
@@ -45,6 +64,11 @@ export default function ContactForm() {
       }
     } catch (err) {
       console.error("Submission error:", err);
+      trackFormError({
+        form_id: 'main_contact_form',
+        form_name: 'Consultation Request',
+        error_type: 'submission_relay_error',
+      });
       toast.error("Transmission notice: If you don't hear back shortly, please email us directly at infomahntrix@gmail.com");
       // Still set submitted if direct relay was triggered
       setIsSubmitted(true);

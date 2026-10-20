@@ -59,14 +59,14 @@ export default function Footer() {
             <Link className="text-sm text-paper/80 transition-colors hover:text-lime" href="/services/">
               Services
             </Link>
+            <Link className="text-sm text-paper/80 transition-colors hover:text-lime" href="/product/">
+              Product (ViCatch)
+            </Link>
             <Link className="text-sm text-paper/80 transition-colors hover:text-lime" href="/work/">
               Work
             </Link>
             <Link className="text-sm text-paper/80 transition-colors hover:text-lime" href="/about/">
               About
-            </Link>
-            <Link className="text-sm text-paper/80 transition-colors hover:text-lime" href="/pricing/">
-              Pricing
             </Link>
             <Link className="text-sm text-paper/80 transition-colors hover:text-lime" href="/insights/">
               Insights

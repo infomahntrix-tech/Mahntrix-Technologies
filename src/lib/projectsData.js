@@ -1,5 +1,34 @@
 export const PROJECTS = [
   {
+    id: "vicatch",
+    slug: "vicatch",
+    title: "ViCatch — Live Video Matching & Streaming Platform",
+    category: "Mobile Applications",
+    year: "2026",
+    url: "vicatch.app",
+    liveUrl: "/product/",
+    image: "/images/projects/vicatch-hero.jpg",
+    client: "Mahntrix Proprietary Product",
+    color: "#7655F7",
+    description: "High-performance real-time 1-on-1 live video matching and interactive social streaming mobile app engineered with React Native, Expo, and sub-80ms WebRTC streams.",
+    services: ["Mobile Applications", "Web Applications", "Custom Software"],
+    metric: { value: "< 80ms", label: "Media Stream Latency" },
+    challenge: "Traditional video chat apps suffer from high battery consumption, frame drops on mobile networks, and slow signaling connection handshakes.",
+    solution: "Engineered a low-latency WebRTC peer-to-peer and relayed video streaming engine with sub-80ms connection times, interest-based matchmaking radar, animated virtual gifting, and end-to-end encrypted calls.",
+    techStack: ["React Native", "Expo", "WebRTC", "Socket.io", "Node.js", "Redis", "AWS Elastic Beanstalk", "Prisma"],
+    results: [
+      { number: "< 80ms", label: "Stream Latency" },
+      { number: "60 FPS", label: "HD Rendering" },
+      { number: "99.99%", label: "Signaling Uptime" },
+      { number: "AES-256", label: "E2E Encryption" }
+    ],
+    testimonial: {
+      quote: "ViCatch represents our flagship real-time engineering capabilities — marrying ultra-low-latency WebRTC with silky 60fps animations.",
+      author: "Lead Mobile Architect",
+      title: "Mahntrix Technologies"
+    }
+  },
+  {
     id: "school-erp",
     slug: "school-erp",
     title: "School ERP Ecosystem",
@@ -236,6 +265,7 @@ export const PROJECTS = [
 
 export const WORK_CATEGORIES = [
   "All",
+  "Mobile Applications",
   "Enterprise ERP Systems",
   "Web Applications",
   "Websites",

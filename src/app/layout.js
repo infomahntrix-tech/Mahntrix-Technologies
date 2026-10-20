@@ -2,7 +2,11 @@ import { Bricolage_Grotesque, Hanken_Grotesk, JetBrains_Mono, Yellowtail } from 
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import FloatingActions from "@/components/FloatingActions";
 import { Toaster } from "react-hot-toast";
+import Script from "next/script";
+
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || "GTM-TRZVZ99Q";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -84,14 +88,44 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${bricolage.variable} ${hanken.variable} ${jetbrainsMono.variable} ${yellowtail.variable}`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${bricolage.variable} ${hanken.variable} ${jetbrainsMono.variable} ${yellowtail.variable}`}
+    >
       <body className="bg-ink text-paper selection:bg-lime selection:text-ink font-sans antialiased min-h-screen flex flex-col">
+        {/* Google Tag Manager (noscript) */}
+        {GTM_ID && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        )}
+        {/* Google Tag Manager Script */}
+        {GTM_ID && (
+          <Script
+            id="google-tag-manager"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');`,
+            }}
+          />
+        )}
         <Toaster position="bottom-right" toastOptions={{ style: { background: '#121413', color: '#f3f4ec', border: '1px solid rgba(255,255,255,0.1)' } }} />
         <Header />
         <div className="flex-1">
           {children}
         </div>
         <Footer />
+        <FloatingActions />
       </body>
     </html>
   );

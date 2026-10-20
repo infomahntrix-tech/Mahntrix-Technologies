@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const ProcessSection = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -92,12 +92,6 @@ const ProcessSection = () => {
       stats: { value: 'Ongoing', label: 'Support' }
     }
   ];
-
-  // Scroll animation
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"]
-  });
 
   useEffect(() => {
     const handleScroll = () => {

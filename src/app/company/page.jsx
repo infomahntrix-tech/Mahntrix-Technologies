@@ -12,7 +12,6 @@ import Marquee from '@/components/company/Marquee'
 import Testimonial from '@/components/company/TestimonialsCarousel'
 import ContactForm from '@/components/company/ContactForm';
 import ImageMarquee from '@/components/company/ImageMarquee'
-// import PricingPlans from '@/components/company/PricingPlans';
 import About from '@/components/company/About';
 
 // Project Inquiry Popup Component
@@ -420,7 +419,6 @@ export default function Home() {
       <About />
       {/* <ProjectsShowcase /> */}
       <Testimonial />
-      {/* <PricingPlans /> */}
       <ContactForm />
       {showPopup && (
         <ProjectInquiryPopup

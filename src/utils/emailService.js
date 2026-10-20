@@ -1,3 +1,5 @@
+import { trackLeadSubmission } from "@/lib/analytics";
+
 // High-reliability email delivery service for Mahntrix Technologies
 export const RECIPIENT_EMAIL = "infomahntrix@gmail.com";
 
@@ -16,6 +18,12 @@ export const sendContactEmail = async (formData) => {
 
       if (apiResponse.ok) {
         const data = await apiResponse.json();
+        trackLeadSubmission({
+          form_id: 'contact_form_service',
+          form_name: 'Consultation Request',
+          service_name: formData.service || formData.projectType || 'General Inquiry',
+          budget_tier: formData.budget || 'Not specified',
+        });
         return { success: true, data };
       }
     } catch (apiErr) {
@@ -47,6 +55,12 @@ export const sendContactEmail = async (formData) => {
     const relayResult = await relayResponse.json().catch(() => ({}));
 
     if (relayResult.success === "true" || relayResult.success === true || relayResponse.ok) {
+      trackLeadSubmission({
+        form_id: 'contact_form_relay',
+        form_name: 'Consultation Request',
+        service_name: formData.service || formData.projectType || 'General Inquiry',
+        budget_tier: formData.budget || 'Not specified',
+      });
       return { success: true };
     } else {
       throw new Error(relayResult.message || 'Transmission failed');

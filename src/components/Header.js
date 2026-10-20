@@ -8,9 +8,9 @@ import { ArrowUpRight, Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
   { name: "Services", href: "/services/" },
+  { name: "Product", href: "/product/" },
   { name: "Work", href: "/work/" },
   { name: "About", href: "/about/" },
-  { name: "Pricing", href: "/pricing/" },
   { name: "Insights", href: "/insights/" },
 ];
 
@@ -68,7 +68,12 @@ export default function Header() {
         {/* Action Button & Mobile Toggle */}
         <div className="flex items-center gap-2">
           <div className="hidden sm:block">
-            <Link href="/contact/" className="inline-flex">
+            <Link
+              href="/contact/"
+              data-analytics-cta="Book a call"
+              data-analytics-location="header_desktop"
+              className="inline-flex"
+            >
               <span className="group relative inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-tight transition-colors duration-300 will-change-transform bg-lime text-ink hover:bg-lime-bright h-11 px-5 text-sm font-display">
                 <span className="relative z-10 inline-flex items-center gap-2">
                   Book a call
@@ -111,7 +116,12 @@ export default function Header() {
             ))}
           </div>
           <div className="pt-2">
-            <Link href="/contact/" className="w-full inline-flex">
+            <Link
+              href="/contact/"
+              data-analytics-cta="Book a consultation"
+              data-analytics-location="header_mobile"
+              className="w-full inline-flex"
+            >
               <span className="w-full group relative inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-tight transition-colors duration-300 bg-lime text-ink hover:bg-lime-bright h-12 px-6 text-base font-display">
                 Book a consultation
                 <ArrowUpRight className="size-5" />
